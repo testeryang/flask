@@ -45,6 +45,12 @@ def my_mysql():
 @app.route('/')
 def login():
     return render_template('login.html')
+@app.route('/products')
+def products():
+    return render_template('products.html')
+@app.route('/accounts')
+def accounts():
+    return render_template('accounts.html')
 @app.route('/login',methods=["GET","POST"])
 def getLoginRequest():
 #查询用户名及密码是否匹配及存在
