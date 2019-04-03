@@ -1,4 +1,4 @@
-from flask import Flask, render_template,url_for,Blueprint
+from flask import Flask, render_template, url_for, Blueprint, session
 import pymysql
 import traceback
 import json
@@ -6,6 +6,9 @@ from flask import request
 from test.test import blog
 
 app = Flask(__name__)
+
+# app.config['SECRET_KEY']='000000'
+# app.secret_key='1234567890!@#$%^&*()'
 
 app.register_blueprint(blog,url_prefix='/test')
 # @app.route('/echarts')
@@ -51,6 +54,9 @@ def products():
 @app.route('/accounts')
 def accounts():
     return render_template('accounts.html')
+@app.route('/index')
+def index():
+    return render_template('index.html')
 @app.route('/login',methods=["GET","POST"])
 def getLoginRequest():
 #查询用户名及密码是否匹配及存在
@@ -68,6 +74,7 @@ def getLoginRequest():
         # print(len(results))
         if len(results)==1:
             username=request.form['username']
+            session['username'] = username
             return render_template('index.html',username=username)
         else:
             return '用户名或密码不正确'
@@ -79,5 +86,7 @@ def getLoginRequest():
         db.rollback()
     # 关闭数据库连接
     db.close()
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port="5000",debug=True)
