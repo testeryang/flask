@@ -3,14 +3,29 @@ import pymysql
 import traceback
 import json
 from flask import request
-from test.test import blog
+from test.test import user
 
 app = Flask(__name__)
+@app.before_request
+def before_app():
+    # print(request.url)
+    if request.url=='http://localhost:5000/' or request.url=='http://localhost:5000/login':
+        pass
+    else:
+        if 'username' in session:
+            pass
+        else:
+            return "用户未登录"
+@app.errorhandler(404)
+def miss404(e):
+    return render_template('404.html'),404
+@app.errorhandler(500)
+def miss500(e):
+    return render_template('505.html'),500
+app.config['SECRET_KEY']='000000'
+app.secret_key='1234567890!@#$%^&*()'
 
-# app.config['SECRET_KEY']='000000'
-# app.secret_key='1234567890!@#$%^&*()'
-
-app.register_blueprint(blog,url_prefix='/test')
+app.register_blueprint(user,url_prefix='/user')
 # @app.route('/echarts')
 # def my_echart():
 # #在浏览器上渲染my_templaces.html模板
@@ -65,7 +80,7 @@ def getLoginRequest():
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
     # SQL 查询语句
-    sql = "select * from user where name='"+request.form['username']+"' and password='"+request.form['password']+"'"
+    sql = "select * from user where username='"+request.form['username']+"' and password='"+request.form['password']+"'"
     # get  request.args.get
     try:
         # 执行sql语句

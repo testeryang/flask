@@ -1,7 +1,11 @@
 from flask import Blueprint, render_template, abort, redirect, url_for
 
-blog = Blueprint('blog', __name__)
+user = Blueprint('user', __name__)
 
-@blog.route('/test')
+@user.route('/test')
 def index():
     return '<h1>hello,this is admin blueprint</h1>'
+
+@user.route('/tt')
+def tt():
+    return "tt"
