@@ -3,7 +3,9 @@ import pymysql
 import traceback
 import json
 from flask import request
-from test.test import user
+
+from test.jira import jiratest
+from test.video import video
 
 app = Flask(__name__)
 @app.errorhandler(404)
@@ -15,23 +17,24 @@ def miss500(e):
 app.config['SECRET_KEY']='000000'
 app.secret_key='1234567890!@#$%^&*()'
 
-app.register_blueprint(user,url_prefix='/video')
+app.register_blueprint(video,url_prefix='/video')
+app.register_blueprint(jiratest,url_prefix='/jiratest')
 # @app.route('/echarts')
 # def my_echart():
 # #在浏览器上渲染my_templaces.html模板
 #     return render_template('echarts.html')
-@app.before_request
-def before_user():
-    print(request.url)
-    if request.path=="http://127.0.0.1:5000/":
-        print("这是首页")
-        pass
-    else:
-        print("这不是首页")
-        if session is None:
-            return '未登录'
-        else:
-            pass
+# @app.before_request
+# def before_user():
+#     print(request.url)
+#     if request.path=="http://127.0.0.1:5000/":
+#         print("这是首页")
+#         pass
+#     else:
+#         print("这不是首页")
+#         if session is None:
+#             return '未登录'
+#         else:
+#             pass
 @app.route("/echarts", methods=['GET', 'POST'])
 def my_mysql():
     db = pymysql.connect("localhost", "root", "root", "pythontest")
@@ -92,7 +95,7 @@ def getLoginRequest():
         if len(results)==1:
             username=request.form['username']
             session['username'] = username
-            return render_template('index.html',username=username)
+            return render_template('index.html',username=session['username'])
         else:
             return '用户名或密码不正确'
         # 提交到数据库执行
