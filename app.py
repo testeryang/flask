@@ -6,16 +6,6 @@ from flask import request
 from test.test import user
 
 app = Flask(__name__)
-@app.before_request
-def before_app():
-    # print(request.url)
-    if request.url=='http://localhost:5000/' or request.url=='http://localhost:5000/login':
-        pass
-    else:
-        if 'username' in session:
-            pass
-        else:
-            return "用户未登录"
 @app.errorhandler(404)
 def miss404(e):
     return render_template('404.html'),404
@@ -25,11 +15,23 @@ def miss500(e):
 app.config['SECRET_KEY']='000000'
 app.secret_key='1234567890!@#$%^&*()'
 
-app.register_blueprint(user,url_prefix='/user')
+app.register_blueprint(user,url_prefix='/video')
 # @app.route('/echarts')
 # def my_echart():
 # #在浏览器上渲染my_templaces.html模板
 #     return render_template('echarts.html')
+@app.before_request
+def before_user():
+    print(request.url)
+    if request.path=="http://127.0.0.1:5000/":
+        print("这是首页")
+        pass
+    else:
+        print("这不是首页")
+        if session is None:
+            return '未登录'
+        else:
+            pass
 @app.route("/echarts", methods=['GET', 'POST'])
 def my_mysql():
     db = pymysql.connect("localhost", "root", "root", "pythontest")
@@ -101,7 +103,10 @@ def getLoginRequest():
         db.rollback()
     # 关闭数据库连接
     db.close()
-
+@app.route("/logout")
+def logout():
+    # session.pop('username')
+    return render_template("login.html")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port="5000",debug=True)

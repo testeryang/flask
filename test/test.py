@@ -6,6 +6,6 @@ user = Blueprint('user', __name__)
 def index():
     return '<h1>hello,this is admin blueprint</h1>'
 
-@user.route('/tt')
+@user.route('/001')
 def tt():
-    return "tt"
+    return render_template("video.html")
