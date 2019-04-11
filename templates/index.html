@@ -114,16 +114,19 @@
 
             <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
                 <div class="tm-bg-primary-dark tm-block">
-                    <h2 class="tm-block-title">Performance</h2>
-                    <canvas id="barChart"></canvas>
+{#                    <h2 class="tm-block-title">Performance</h2>#}
+{#                    <canvas id="barChart"></canvas>#}
+{#                    <div id="main2" style="width: 400px;height:400px;"></div>#}
+                    <iframe name="tab2" src="video/001" style="width: 400px;height: 400px" frameborder="no" scrolling="no"></iframe>
                 </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
                 <div class="tm-bg-primary-dark tm-block tm-block-taller">
-                    <h2 class="tm-block-title">Storage Information</h2>
-                    <div id="pieChartContainer">
-                        <canvas id="pieChart" class="chartjs-render-monitor" width="200" height="200"></canvas>
-                    </div>
+{#                    <h2 class="tm-block-title">Storage Information</h2>#}
+{#                    <div id="pieChartContainer">#}
+{#                        <canvas id="pieChart" class="chartjs-render-monitor" width="200" height="200"></canvas>#}
+{#                    </div>#}
+                     <iframe name="tab2" src="video/001" style="width: 400px;height: 400px" frameborder="no" ></iframe>
                 </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
@@ -391,7 +394,7 @@
     <footer class="tm-footer row tm-mt-small">
         <div class="col-12 font-weight-light">
             <p class="text-center text-white mb-0 px-4 small">Copyright &copy; 2019.Company name All rights reserved.<a
-                    target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
+                    target="_blank" href="http://106.13.116.136:5000">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
         </div>
     </footer>
 </div>
@@ -430,86 +433,79 @@
         });
     })
 </script>
-<script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'));
-    // 指定图表的配置项和数据
-    var option = {
-        title: {
-            text: 'jiraBUG情况',
-            subtext: '请悉知',
-            x: 'center'
-        },
-        tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-            orient: 'vertical',
-            x: 'left',
-            data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-        },
-        toolbox: {
-            show: true,
-            feature: {
-                mark: {show: true},
-                dataView: {show: true, readOnly: false},
-                magicType: {
-                    show: true,
-                    type: ['pie', 'funnel'],
-                    option: {
-                        funnel: {
-                            x: '25%',
-                            width: '50%',
-                            funnelAlign: 'left',
-                            max: 1548
-                        }
-                    }
-                },
-                restore: {show: true},
-                saveAsImage: {show: true}
-            }
-        },
-        calculable: true,
-        series: [
-            {
-                name: '访问来源',
-                type: 'pie',
-                radius: '55%',
-                center: ['50%', '60%'],
-                data: [
-                    {value: 335, name: '直接访问'},
-                    {value: 310, name: '邮件营销'},
-                    {value: 234, name: '联盟广告'},
-                    {value: 135, name: '视频广告'},
-                    {value: 1548, name: '搜索引擎'}
-                ]
-            }
-        ]
-    };
-    myChart.setOption(option);
-</script>
 <script>
+    var myChart = echarts.init(document.getElementById('main'));
+    myChart.showLoading();
     $.ajax({
-        type: "post",
+        type: "get",
         async: true,
-        url: "/jiaratest/getallbug",
+        url: "/jiratest/getallbug",
         dataType: "json",
         success: function (result) {
-            console.log(result);
+            {#console.log(result);#}
             if (result) {
-                var obj = eval('(' + result + ')');
-                myChart.hideLoading();
+                {#var obj = eval('(' + result + ')');#}
+
                 myChart.setOption({
-                    xAxis: {
-                        data: ["AA", "BB"]
+                    title: {
+                        text: 'jiraBUG情况',
+                        subtext: '请悉知',
+                        x: 'center',
+                        textStyle: {//标题内容的样式
+                            color: '#fff',//京东红
+                            fontStyle: 'normal',//主标题文字字体风格，默认normal，有italic(斜体),oblique(斜体)
+                            fontWeight: "lighter",//可选normal(正常)，bold(加粗)，bolder(加粗)，lighter(变细)，100|200|300|400|500...
+                            fontFamily: "san-serif",//主题文字字体，默认微软雅黑
+                            fontSize: 18//主题文字字体大小，默认为18px
+                        },
                     },
-                    series: [{
-                        data: result,
-                        itemStyle : { normal: {label : {show: true}}}
-                    }]
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data: ['未解决BUG', '已解决BUG', '关闭的BUG'],
+                        textStyle: {
+                            color: '#fff'
+                        },
+                    },
+                    toolbox: {
+                        show: false,
+                        feature: {
+                            mark: {show: true},
+                            dataView: {show: true, readOnly: false},
+                            magicType: {
+                                show: true,
+                                type: ['pie', 'funnel'],
+                                option: {
+                                    funnel: {
+                                        x: '25%',
+                                        width: '50%',
+                                        funnelAlign: 'left',
+                                        max: 1548
+                                    }
+                                }
+                            },
+                            restore: {show: true},
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: 'BUG情况',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: result,
+                        }
+                    ]
+
                 });
             }
+            myChart.hideLoading();
         },
         error: function (errorMsg) {
             //请求失败时执行该函数

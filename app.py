@@ -95,7 +95,7 @@ def getLoginRequest():
         if len(results)==1:
             username=request.form['username']
             session['username'] = username
-            return render_template('index.html',username=session['username'])
+            return render_template('index.html',username=username)
         else:
             return '用户名或密码不正确'
         # 提交到数据库执行
