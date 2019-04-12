@@ -6,6 +6,7 @@ from flask import request
 
 from test.jira import jiratest
 from test.video import video
+from test.timer import timer
 
 app = Flask(__name__)
 @app.errorhandler(404)
@@ -19,6 +20,7 @@ app.secret_key='1234567890!@#$%^&*()'
 
 app.register_blueprint(video,url_prefix='/video')
 app.register_blueprint(jiratest,url_prefix='/jiratest')
+app.register_blueprint(timer,url_prefix='/timer')
 # @app.route('/echarts')
 # def my_echart():
 # #在浏览器上渲染my_templaces.html模板
