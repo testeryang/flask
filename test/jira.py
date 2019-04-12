@@ -111,7 +111,6 @@ def getjirausername():
     jsonlist = json.dumps(list)
     return jsonlist
 
-
 @jiratest.route('/getpersonbug')
 def getpersonbug():
     return render_template('/main/personbugmath.html')
@@ -121,7 +120,8 @@ def aclog():
     value2=jira.dashboard(11300)
     # print(jira.dashboards())
     # print(value2.item(11602))
-    print(requests.get("http://bug.corp.36kr.com/rest/api/2/dashboard/11300/gadgets/11602").text)
+    # print(requests.get("http://bug.corp.36kr.com/rest/api/2/dashboard/11300/gadget/11602").text)
     # print(jira._get_items_from_page(item_type=,items_key=,resource=))
-
+    print(jira.issue('JZAPP-2886').raw)
+    print(jira.issue('JZAPP-2886').fields.summary)
     return '1'
