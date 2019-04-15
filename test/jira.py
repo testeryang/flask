@@ -1,3 +1,6 @@
+import xml.dom.minidom as dom
+from xml.dom.minidom import Element
+
 from flask import Blueprint, json, render_template
 from jira import JIRA
 import requests
@@ -117,11 +120,22 @@ def getpersonbug():
 
 @jiratest.route("/getlog")
 def aclog():
-    value2=jira.dashboard(11300)
-    # print(jira.dashboards())
-    # print(value2.item(11602))
-    # print(requests.get("http://bug.corp.36kr.com/rest/api/2/dashboard/11300/gadget/11602").text)
-    # print(jira._get_items_from_page(item_type=,items_key=,resource=))
-    print(jira.issue('JZAPP-2886').raw)
-    print(jira.issue('JZAPP-2886').fields.summary)
+    url="http://bug.corp.36kr.com/plugins/servlet/streams?maxResults=10&relativeLinks=true&streams=key+IS+JZAPP&issues=issue_type+IS+1"
+    cookies='JSESSIONID=47BC5B6D940267D5BE5346492663F301; seraph.rememberme.cookie=17000%3A5c87912d2b706e98a1b4a557afba3f6951331799; atlassian.xsrf.token=B9HU-5AZ0-CW41-69GO|793108f87fa9aebddcf4dcfb3ee830ea390a2586|lin'
+    # value2=jira.dashboard(11300)
+    headers = {
+        "User_Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
+        "Cookie": cookies
+        }
+
+    req = requests.get(url, headers=headers, timeout=60).text
+    print(req)
+    xml=dom.parseString(req)
+    root = xml.getElementsByTagName("name")
+    for rootvalue in root: # type:Element
+        child = rootvalue._get_firstChild()
+        print(child.data)
+    # aclog=requests.get("http://bug.corp.36kr.com/plugins/servlet/streams?maxResults=10&relativeLinks=true&streams=key+IS+JZAPP&issues=issue_type+IS+1");
+    # print(jira.issue('JZAPP-2886').raw)   #BUG详细信息
+    # print(jira.issue('JZAPP-2886').fields.summary)
     return '1'
