@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人BUG处理时间</title>
+    <script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<div id="main" align="center" style="width: 400px;height:400px;margin: 0 auto;"></div>
+</body>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = {
+        title: {
+            text: '各开发者的BUG数量',
+            subtext: '纯属真实',
+            textStyle: {//标题内容的样式
+                color: '#fff',//京东红
+                fontStyle: 'normal',//主标题文字字体风格，默认normal，有italic(斜体),oblique(斜体)
+                fontWeight: "lighter",//可选normal(正常)，bold(加粗)，bolder(加粗)，lighter(变细)，100|200|300|400|500...
+                fontFamily: "san-serif",//主题文字字体，默认微软雅黑
+                fontSize: 18//主题文字字体大小，默认为18px
+            },
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['BUG量'],
+            show: false
+        },
+        toolbox: {
+            show: false,
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40,
+                    textStyle: {
+                        color: '#fff' //坐标值得具体的颜色
+                    }
+                },
+                type: 'category',
+                data: ['huangyuxi', '董建琴', '方琪中', '贾剑锋', '李博翰', '申龙', '吴迪', '武河', '杨杰', '杨洋', '张连升', '朱思美', '闫大卫', '未分配']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'
+                    }
+                }
+            }
+        ],
+        series: [
+            {
+                name: 'BUG量',
+                type: 'bar',
+                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'}
+                    ]
+                }
+            },
+        ]
+    };
+    myChart.showLoading();
+    myChart.setOption(option);
+</script>
+<script>
+    $.ajax({
+        type: "get",
+        async: true,
+        url: "/jiratest/time",
+        dataType: "json",
+        success: function (result) {
+            console.log(result);
+            if (result) {
+                var obj = eval('(' + result + ')');
+                myChart.hideLoading();
+                myChart.setOption({
+                    series: [
+                        {
+                            name: 'BUG量',
+                            type: 'bar',
+                            data: result,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                    ]
+                });
+            }
+            myChart.hideLoading();
+        },
+        error: function (errorMsg) {
+            //请求失败时执行该函数
+            alert("请求数据失败!");
+            myChart.hideLoading();
+        }
+    });
+</script>
+</html>
