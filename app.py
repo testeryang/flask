@@ -1,14 +1,20 @@
-from flask import Flask, render_template, url_for, Blueprint, session
+from flask import Flask, render_template, url_for, Blueprint, session, current_app
 import pymysql
 import traceback
 import json
 from flask import request
+from flask_apscheduler import APScheduler
 
 from test.jira import jiratest
 from test.video import video
-from test.timer import timer
+from test.timers import timers
+import config
+
+def job_1():
+    print(111)
 
 app = Flask(__name__)
+
 @app.errorhandler(404)
 def miss404(e):
     return render_template('404.html'),404
@@ -20,23 +26,8 @@ app.secret_key='1234567890!@#$%^&*()'
 
 app.register_blueprint(video,url_prefix='/video')
 app.register_blueprint(jiratest,url_prefix='/jiratest')
-app.register_blueprint(timer,url_prefix='/timer')
-# @app.route('/echarts')
-# def my_echart():
-# #在浏览器上渲染my_templaces.html模板
-#     return render_template('echarts.html')
-# @app.before_request
-# def before_user():
-#     print(request.url)
-#     if request.path=="http://127.0.0.1:5000/":
-#         print("这是首页")
-#         pass
-#     else:
-#         print("这不是首页")
-#         if session is None:
-#             return '未登录'
-#         else:
-#             pass
+app.register_blueprint(timers,url_prefix='/timers')
+
 @app.route("/echarts", methods=['GET', 'POST'])
 def my_mysql():
     db = pymysql.connect("localhost", "root", "root", "pythontest")
@@ -115,4 +106,11 @@ def logout():
     return render_template("login.html")
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port="5000",debug=True)
+    app.config.from_object(config)
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+
+    scheduler.start()
+    app.run(host="0.0.0.0",port="4000")
+
+
