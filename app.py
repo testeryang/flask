@@ -4,14 +4,15 @@ import traceback
 import json
 from flask import request
 from flask_apscheduler import APScheduler
+from flask_sqlalchemy import SQLAlchemy
 
+from test.adddata import setdata
 from test.jira import jiratest
 from test.video import video
-from test.timers import timers
 import config
 
 def job_1():
-    print(111)
+    setdata("INSERT INTO avgtime(name,usertime,nowtime) VALUES ('杨杰',2019,'2019-04-25')")
 
 app = Flask(__name__)
 
@@ -26,7 +27,6 @@ app.secret_key='1234567890!@#$%^&*()'
 
 app.register_blueprint(video,url_prefix='/video')
 app.register_blueprint(jiratest,url_prefix='/jiratest')
-app.register_blueprint(timers,url_prefix='/timers')
 
 @app.route("/echarts", methods=['GET', 'POST'])
 def my_mysql():
@@ -107,9 +107,9 @@ def logout():
 
 if __name__ == '__main__':
     app.config.from_object(config)
+    db = SQLAlchemy(app, use_native_unicode='utf8')
     scheduler = APScheduler()
     scheduler.init_app(app)
-
     scheduler.start()
     app.run(host="0.0.0.0",port="4000")
 
