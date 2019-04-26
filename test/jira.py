@@ -7,7 +7,7 @@ from jira import JIRA
 jiratest = Blueprint('jiratest', __name__)
 jira = JIRA("http://bug.corp.36kr.com", basic_auth=('17010054196', 'Ab123456'))  # a username/password tuple
 
-version='5.3.2'
+version='5.3.4'
 
 def jiramath(version):
     # 找到报告人为admin的所有问题
@@ -152,7 +152,7 @@ def getpersonbugtime():
 #     return child.data,links
 
 def resulttime(phone):
-    issue1=jira.search_issues('project = JZAPP AND issuetype = Bug AND affectedVersion = 5.3.2 AND status = Closed AND assignee in ('+phone+')', maxResults=1000)
+    issue1=jira.search_issues('project = JZAPP AND issuetype = Bug AND affectedVersion = '+version+' AND status = Closed AND assignee in ('+phone+')', maxResults=1000)
     print(issue1)
     list=[]
     for issuevalue in issue1: #type:issues
@@ -187,19 +187,6 @@ def resulttime(phone):
         remini=jira.issue(issueid).fields.resolutiondate[14:16]
         print(remini)
         resecond=jira.issue(issueid).fields.resolutiondate[17:19]
-        print(resecond)
-
-        # nowday=year+mouth+day
-        # nowtime = hour + mini + second
-        # intnowday=int(nowday)
-        # intnowtime = int(nowtime)
-        # nowtime=nowday+nowtime
-
-        # renowday = reyear + remouth + reday
-        # renowtime = rehour + remini + resecond
-        # intnowday = int(renowday)
-        # intnowtime = int(renowtime)
-        # renowtime=renowday+renowtime
 
         d1= datetime.datetime(int(year), int(mouth), int(day), int(hour), int(mini))
         print(d1)
@@ -210,6 +197,8 @@ def resulttime(phone):
         list.append(d3.seconds)
     print(list)
     avg=np.mean(list)
+    if avg==[]:
+        return '0'
     return str(avg)
 
 @jiratest.route("/time")
@@ -221,20 +210,21 @@ def avgtime():
     jiajianfeng=resulttime('18238671446')
     libohan=resulttime('13261750653')
     shenlong=resulttime('shenlong')
-    wudi=resulttime('wudi')
+    # wudi=resulttime('wudi')
     wuhe=resulttime('wuhe')
     yangjie=resulttime('17010054196')
     yangyang=resulttime('18310783103')
     zhangliansheng=resulttime('zhangliansheng')
     zhusimei=resulttime('18500197607')
     yandawei=resulttime('15201021632')
+
     timelist.append(int(float(huangyuxi)))
     timelist.append(int(float(dongjianqin)))
     timelist.append(int(float(fangqizhong)))
     timelist.append(int(float(jiajianfeng)))
     timelist.append(int(float(libohan)))
     timelist.append(int(float(shenlong)))
-    timelist.append(int(float(wudi)))
+    # timelist.append(int(float(wudi)))
     timelist.append(int(float(wuhe)))
     timelist.append(int(float(yangjie)))
     timelist.append(int(float(yangyang)))

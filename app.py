@@ -1,18 +1,26 @@
+import datetime
+
 from flask import Flask, render_template, url_for, Blueprint, session, current_app
 import pymysql
 import traceback
 import json
 from flask import request
 from flask_apscheduler import APScheduler
-from flask_sqlalchemy import SQLAlchemy
 
 from test.adddata import setdata
-from test.jira import jiratest
+from test.jira import jiratest, avgtime
 from test.video import video
 import config
 
 def job_1():
-    setdata("INSERT INTO avgtime(name,usertime,nowtime) VALUES ('杨杰',2019,'2019-04-25')")
+    now=datetime.datetime.now().strftime('%Y-%m-%d')
+    b = avgtime()
+    print(b)
+    avgtimes=json.loads(b)
+    print('this is:'+avgtimes)
+    users=['huangyuxi','董建琴','方琪中','贾剑锋','李博翰','申龙','吴迪 [X]','武河','杨杰','杨洋','张连升','朱思美','闫大卫','未分配']
+    for index in range(len(avgtimes)):
+        setdata("INSERT INTO avgtime(name,usertime,nowtime) VALUES ("+users[index],avgtimes()[index],now+")")
 
 app = Flask(__name__)
 
@@ -22,8 +30,6 @@ def miss404(e):
 @app.errorhandler(500)
 def miss500(e):
     return render_template('505.html'),500
-app.config['SECRET_KEY']='000000'
-app.secret_key='1234567890!@#$%^&*()'
 
 app.register_blueprint(video,url_prefix='/video')
 app.register_blueprint(jiratest,url_prefix='/jiratest')
@@ -106,9 +112,11 @@ def logout():
     return render_template("login.html")
 
 if __name__ == '__main__':
-    app.config.from_object(config)
-    db = SQLAlchemy(app, use_native_unicode='utf8')
+    # app.config.from_object(config)
+
     scheduler = APScheduler()
+    scheduler.add_job(func=job_1(), args=('一次性任务',),
+                      next_run_time=datetime.datetime.now() + datetime.timedelta(seconds=12))
     scheduler.init_app(app)
     scheduler.start()
     app.run(host="0.0.0.0",port="4000")
