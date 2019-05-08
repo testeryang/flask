@@ -9,5 +9,3 @@ def index():
 @video.route('/001')
 def tt():
     return render_template("video.html")
-# if __name__ == '__main__':
-#     print(2222)

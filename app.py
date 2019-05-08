@@ -24,6 +24,8 @@ def job_1():
 
 app = Flask(__name__)
 
+SECRET_KEY='000000'
+secret_key='1234567890!@#$%^&*()'
 @app.errorhandler(404)
 def miss404(e):
     return render_template('404.html'),404
@@ -93,7 +95,7 @@ def getLoginRequest():
         # print(len(results))
         if len(results)==1:
             username=request.form['username']
-            session['username'] = username
+            # session['username'] = username
 
             return render_template('index.html',username=username)
         else:
@@ -114,11 +116,11 @@ def logout():
 if __name__ == '__main__':
     # app.config.from_object(config)
 
-    scheduler = APScheduler()
-    scheduler.add_job(func=job_1(), args=('一次性任务',),
-                      next_run_time=datetime.datetime.now() + datetime.timedelta(seconds=12))
-    scheduler.init_app(app)
-    scheduler.start()
-    app.run(host="0.0.0.0",port="4000")
+    # scheduler = APScheduler()
+    # scheduler.add_job(func=job_1(), args=('一次性任务',),
+    #                   next_run_time=datetime.datetime.now() + datetime.timedelta(seconds=12))
+    # scheduler.init_app(app)
+    # scheduler.start()
+    app.run(host="0.0.0.0",port="5000")
 
 

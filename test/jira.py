@@ -235,6 +235,7 @@ def avgtime():
     print(jsonlist)
     return jsonlist
 
-
-
+@jiratest.route("/text")
+def text():
+    return render_template('products2.html')
 
