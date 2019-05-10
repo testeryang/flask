@@ -255,5 +255,4 @@ def text3():
 @jiratest.route("/delete/<id>", methods=['GET'])
 def text4(id):
     setdata("DELETE FROM todayinfo WHERE id = "+id)
-
-    return "1111";
+    return "";
