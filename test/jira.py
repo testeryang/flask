@@ -1,8 +1,10 @@
 import datetime
 
 import numpy as np
-from flask import Blueprint, json, render_template
+from flask import Blueprint, json, render_template, request
 from jira import JIRA
+
+from test.adddata import setdata, getdata
 
 jiratest = Blueprint('jiratest', __name__)
 jira = JIRA("http://bug.corp.36kr.com", basic_auth=('17010054196', 'Ab123456'))  # a username/password tuple
@@ -234,8 +236,24 @@ def avgtime():
     jsonlist=json.dumps(timelist)
     print(jsonlist)
     return jsonlist
-
-@jiratest.route("/text")
-def text():
+@jiratest.route("/text01")
+def text1():
     return render_template('products2.html')
+@jiratest.route("/text02/", methods=['POST'])
+def text2():
+    info = request.form.get('info', '')
+    print(info)
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')
+    setdata("INSERT INTO todayinfo(value,creattime,updatetime,iswork) VALUES ('%s','%s','%s','%d')" %(info,now,'',0))
+    return render_template('products2.html',msg='便签上传成功')
+@jiratest.route("/text03/")
+def text3():
+    list=getdata("SELECT * FROM todayinfo")
+    jsonlist=json.dumps(list)
+    print(jsonlist)
+    return jsonlist
+@jiratest.route("/delete/<id>", methods=['GET'])
+def text4(id):
+    setdata("DELETE FROM todayinfo WHERE id = "+id)
 
+    return "1111";
