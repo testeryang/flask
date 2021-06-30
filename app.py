@@ -5,22 +5,22 @@ import pymysql
 import traceback
 import json
 from flask import request
-from flask_apscheduler import APScheduler
+# from flask_apscheduler import APScheduler
 
 from test.adddata import setdata
 from test.jira import jiratest, avgtime
 from test.video import video
 import config
 
-def job_1():
-    now=datetime.datetime.now().strftime('%Y-%m-%d')
-    b = avgtime()
-    print(b)
-    avgtimes=json.loads(b)
-    print('this is:'+avgtimes)
-    users=['huangyuxi','董建琴','方琪中','贾剑锋','李博翰','申龙','吴迪 [X]','武河','杨杰','杨洋','张连升','朱思美','闫大卫','未分配']
-    for index in range(len(avgtimes)):
-        setdata("INSERT INTO avgtime(name,usertime,nowtime) VALUES ("+users[index],avgtimes()[index],now+")")
+# def job_1():
+#     now=datetime.datetime.now().strftime('%Y-%m-%d')
+#     b = avgtime()
+#     print(b)
+#     avgtimes=json.loads(b)
+#     print('this is:'+avgtimes)
+#     users=['huangyuxi','董建琴','方琪中','贾剑锋','李博翰','申龙','吴迪 [X]','武河','杨杰','杨洋','张连升','朱思美','闫大卫','未分配']
+#     for index in range(len(avgtimes)):
+#         setdata("INSERT INTO avgtime(name,usertime,nowtime) VALUES ("+users[index],avgtimes()[index],now+")")
 
 app = Flask(__name__)
 
@@ -82,32 +82,33 @@ def index():
 def getLoginRequest():
 #查询用户名及密码是否匹配及存在
     #连接数据库,此前在数据库中创建数据库TESTDB
-    db = pymysql.connect("localhost","root","root","pythontest" )
+    # db = pymysql.connect("localhost","root","root","pythontest" )
     # 使用cursor()方法获取操作游标
-    cursor = db.cursor()
+    # cursor = db.cursor()
     # SQL 查询语句
-    sql = "select * from user where username='"+request.form['username']+"' and password='"+request.form['password']+"'"
+    # sql = "select * from user where username='"+request.form['username']+"' and password='"+request.form['password']+"'"
     # get  request.args.get
-    try:
-        # 执行sql语句
-        cursor.execute(sql)
-        results = cursor.fetchall()
-        # print(len(results))
-        if len(results)==1:
-            username=request.form['username']
-            # session['username'] = username
+    # try:
+    #     # 执行sql语句
+    #     cursor.execute(sql)
+    #     results = cursor.fetchall()
+    #     # print(len(results))
+    #     if len(results)==1:
+    #         username=request.form['username']
+    #         # session['username'] = username
 
-            return render_template('index.html',username=username)
-        else:
-            return '用户名或密码不正确'
-        # 提交到数据库执行
-        db.commit()
-    except:
+    # return render_template('index.html',username=username)
+    return render_template('index.html')
+        # else:
+        #     return '用户名或密码不正确'
+        # # 提交到数据库执行
+        # db.commit()
+    # except:
         # 如果发生错误则回滚
-        traceback.print_exc()
-        db.rollback()
+        # traceback.print_exc()
+        # db.rollback()
     # 关闭数据库连接
-    db.close()
+    # db.close()
 @app.route("/logout")
 def logout():
     # session.pop('username')

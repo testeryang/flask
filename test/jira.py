@@ -7,9 +7,9 @@ from jira import JIRA
 from test.adddata import setdata, getdata
 
 jiratest = Blueprint('jiratest', __name__)
-jira = JIRA("http://bug.corp.36kr.com", basic_auth=('17010054196', 'Ab123456'))  # a username/password tuple
+jira = JIRA("https://jira.ziggurat.cn/", basic_auth=('yangjie', '123456'))  # a username/password tuple
 
-version='5.3.4'
+version='7.3.8'
 
 def jiramath(version):
     # 找到报告人为admin的所有问题
